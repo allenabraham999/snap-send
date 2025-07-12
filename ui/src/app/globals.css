@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --main-green: 15, 130, 140; /* #0F828C */
+  --accent-teal: 120, 185, 181; /* #78B9B5 */
+  --accent-gold: 200, 208, 168; /* #DCD0A8 */
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 15, 130, 140;
+  --background-end-rgb: 120, 185, 181;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(135deg, #79cad1 0%, #015cf8 100%);
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-[#0F828C] text-white rounded-md hover:bg-[#78B9B5] hover:text-[#0F828C] font-bold transition-colors shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-[#DCD0A8] text-[#0F828C] rounded-md hover:bg-[#78B9B5] hover:text-white font-semibold transition-colors;
+  }
+  
+  .input-field {
+    @apply w-full p-2 border border-[#78B9B5] rounded-md focus:outline-none focus:ring-2 focus:ring-[#0F828C] bg-[#DCD0A8]/30 text-[#0F828C] placeholder-[#78B9B5] font-medium;
+  }
+}
