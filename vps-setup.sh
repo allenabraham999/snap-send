@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# PeerLink VPS Setup Script
-# This script helps set up PeerLink on a fresh Ubuntu/Debian VPS
+# SendSnap VPS Setup Script
+# This script helps set up SendSnap on a fresh Ubuntu/Debian VPS
 
 # Exit on error
 set -e
 
-echo "=== PeerLink VPS Setup Script ==="
-echo "This script will install Java, Node.js, Nginx, and set up PeerLink."
+echo "=== SendSnap VPS Setup Script ==="
+echo "This script will install Java, Node.js, Nginx, and set up SendSnap."
 
 # Update system
 echo "Updating system packages..."
@@ -35,9 +35,9 @@ sudo npm install -g pm2
 echo "Installing Maven..."
 sudo apt install -y maven
 
-echo "Cloning repository..."
-git clone https://github.com/allenabraham999/snap-send.git
-cd snap-send
+# echo "Cloning repository..."
+# git clone https://github.com/allenabraham999/snap-send.git
+# cd snap-send
 
 # Build backend
 echo "Building Java backend..."
@@ -59,9 +59,9 @@ if [ -e /etc/nginx/sites-enabled/default ]; then
     echo "Removed default Nginx site configuration."
 fi
 
-# Create the peerlink configuration file with the correct content
-echo "Creating /etc/nginx/sites-available/peerlink..."
-cat <<EOF | sudo tee /etc/nginx/sites-available/peerlink
+# Create the send-snap configuration file with the correct content
+echo "Creating /etc/nginx/sites-available/send-snap..."
+cat <<EOF | sudo tee /etc/nginx/sites-available/send-snap
 server {
     listen 80;
     server_name _; # Catch-all for HTTP requests
@@ -99,15 +99,15 @@ server {
 }
 EOF
 
-# Create the symbolic link to enable the peerlink site
-sudo ln -sf /etc/nginx/sites-available/peerlink /etc/nginx/sites-enabled/peerlink
+# Create the symbolic link to enable the SendSnap site
+sudo ln -sf /etc/nginx/sites-available/send-snap /etc/nginx/sites-enabled/send-snap
 
 sudo nginx -t
 if [ $? -eq 0 ]; then
     sudo systemctl restart nginx
     echo "Nginx configured and restarted successfully."
 else
-    echo "Nginx configuration test failed. Please check /etc/nginx/nginx.conf and /etc/nginx/sites-available/peerlink."
+    echo "Nginx configuration test failed. Please check /etc/nginx/nginx.conf and /etc/nginx/sites-available/send-snap."
     exit 1
 fi
 
@@ -120,12 +120,12 @@ fi
 echo "Starting backend with PM2..."
 # Ensure all dependencies are in the classpath
 CLASSPATH="target/p2p-1.0-SNAPSHOT.jar:$(mvn dependency:build-classpath -DincludeScope=runtime -Dmdep.outputFile=/dev/stdout -q)"
-pm2 start --name peerlink-backend java -- -cp "$CLASSPATH" p2p.App
+pm2 start --name send-snap-backend java -- -cp "$CLASSPATH" p2p.App
 
 # Start frontend with PM2
 echo "Starting frontend with PM2..."
 cd ui
-pm2 start npm --name peerlink-frontend -- start
+pm2 start npm --name send-snap-frontend -- start
 cd ..
 
 # Save PM2 configuration
@@ -134,10 +134,10 @@ pm2 save
 # Set up PM2 to start on boot
 echo "Setting up PM2 to start on boot..."
 pm2 startup
-# Follow the instructions printed by the above command
+
 
 echo "=== Setup Complete ==="
-echo "PeerLink is now running on your VPS!"
+echo "SendSnap is now running on your VPS!"
 echo "Backend API: http://localhost:8080 (Internal - accessed via Nginx)"
 echo "Frontend: http://your_lightsail_public_ip (Access via your instance's IP address)"
 echo "You can access your application using your Lightsail instance's public IP address in your browser."
