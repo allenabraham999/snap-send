@@ -18,9 +18,8 @@ public class App {
                 System.out.println("Shutting down the server!");
                 fileController.stop();
             }));
-            System.out.println("Press enter to stop!");
+            System.out.println("Press Enter to stop the server");
             System.in.read();
-            fileController.stop();
         } catch (Exception e) {
             System.out.println("Failed to start @ port 8080! "+ e.getMessage());
         }
